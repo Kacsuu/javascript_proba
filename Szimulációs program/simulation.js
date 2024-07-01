@@ -1,5 +1,6 @@
 const canvas = document.getElementById('simulationCanvas');
 const ctx = canvas.getContext('2d');
+const messagesDiv = document.getElementById('messages');
 
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
@@ -34,6 +35,12 @@ class Entity {
             if (this.y > canvasHeight - this.size) this.y = canvasHeight - this.size;
         }
     }
+}
+
+function addMessage(message) {
+    const p = document.createElement('p');
+    p.textContent = message;
+    messagesDiv.appendChild(p);
 }
 
 const entities = [];
@@ -95,9 +102,11 @@ function update() {
                     if (entity.type === 'herbivore' && other.type === 'plant') {
                         // Herbivore eats plant
                         entities.splice(j, 1);
+                        addMessage(new Date().toLocaleTimeString() + " Egy zebra megevett egy füvet.");
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
                         // Carnivore eats herbivore
                         entities.splice(j, 1);
+
                     } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
                         // Herbivores meet
                         entity.meetCounter++;
@@ -109,6 +118,9 @@ function update() {
                             entity.meetCounter = 0;
                             other.meetCounter = 0;
                         }
+
+                        addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
+
                     }
                 }
             }

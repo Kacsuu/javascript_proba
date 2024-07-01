@@ -79,6 +79,7 @@ for (let i = 0; i < herbivoreCount; i++) {
 for (let i = 0; i < carnivoreCount; i++) {
     entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore'));
 }
+
 function addEntities(type, count) {
     for (let i = 0; i < count; i++) {
         const x = Math.random() * canvasWidth;
@@ -93,12 +94,12 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     addEntities('herbivore', herbivoreCount);
     addEntities('carnivore', carnivoreCount);
 
-    // Letiltjuk a bemeneti mezőket és a gombot
+    // Disable input fields and button
     document.getElementById('herbivoreCountInput').disabled = true;
     document.getElementById('carnivoreCountInput').disabled = true;
     document.getElementById('addAnimalsButton').disabled = true;
 
-    // Elindítjuk a szimulációt az állatok hozzáadása után
+    // Start the simulation after adding animals
     update();
 });
 
@@ -115,6 +116,7 @@ function update() {
 
     let herbivoreCount = 0;
     let carnivoreCount = 0;
+    let plantCount = 0;
 
     for (let i = entities.length - 1; i >= 0; i--) {
         const entity = entities[i];
@@ -125,6 +127,8 @@ function update() {
             herbivoreCount++;
         } else if (entity.type === 'carnivore') {
             carnivoreCount++;
+        } else if (entity.type === 'plant') {
+            plantCount++;
         }
 
         // Check if entity has starved
@@ -167,9 +171,8 @@ function update() {
                             addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
 
                         }
-                        
-                    }
-                    else if (entity.type === 'carnivore' && other.type === 'carnivore') {
+
+                    } else if (entity.type === 'carnivore' && other.type === 'carnivore') {
                         // Carnivore meet
                         entity.meetCounter++;
                         other.meetCounter++;
@@ -185,6 +188,20 @@ function update() {
                 }
             }
         }
+    }
+
+    // Check if any entity type is exhausted
+    if (plantCount === 0) {
+        addMessage("Nincs több fű. A szimuláció véget ért.");
+        return;
+    }
+    if (herbivoreCount === 0) {
+        addMessage("Nincs több zebra. A szimuláció véget ért.");
+        return;
+    }
+    if (carnivoreCount === 0) {
+        addMessage("Nincs több oroszlán. A szimuláció véget ért.");
+        return;
     }
 
     requestAnimationFrame(update);

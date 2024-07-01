@@ -10,17 +10,27 @@ const herbivoreCount = 10;
 const carnivoreCount = 5;
 const plantGrowthInterval = 2000;
 
+const images = {
+    plant: new Image(),
+    herbivore: new Image(),
+    carnivore: new Image()
+};
+
+images.plant.src = 'Icons/grass.png'; // Path to your grass image
+images.herbivore.src = 'Icons/zebra.png'; // Path to your zebra image
+images.carnivore.src = 'Icons/lion.png'; // Path to your lion image
+
 class Entity {
     constructor(x, y, type) {
         this.x = x;
         this.y = y;
         this.type = type;
-        this.size = 10;
+        this.size = 40;
     }
 
     draw() {
-        ctx.fillStyle = this.type === 'plant' ? 'green' : this.type === 'herbivore' ? 'yellow' : 'red';
-        ctx.fillRect(this.x, this.y, this.size, this.size);
+        const img = images[this.type];
+        ctx.drawImage(img, this.x, this.y, this.size, this.size);
     }
 
     move() {
@@ -130,4 +140,10 @@ function update() {
     requestAnimationFrame(update);
 }
 
-update();
+Promise.all(Object.values(images).map(img => new Promise(resolve => {
+    if (img.complete) {
+        resolve();
+    } else {
+        img.onload = resolve;
+    }
+}))).then(update);

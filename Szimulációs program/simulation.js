@@ -111,6 +111,25 @@ function growPlant() {
 
 setInterval(growPlant, plantGrowthInterval);
 
+function updateCounts() {
+    const herbivoreCountElement = document.getElementById('herbivoreCount');
+    const carnivoreCountElement = document.getElementById('carnivoreCount');
+
+    let herbivoreCount = 0;
+    let carnivoreCount = 0;
+
+    entities.forEach(entity => {
+        if (entity.type === 'herbivore') {
+            herbivoreCount++;
+        } else if (entity.type === 'carnivore') {
+            carnivoreCount++;
+        }
+    });
+
+    herbivoreCountElement.textContent = `Növényevők (zebrák): ${herbivoreCount}`;
+    carnivoreCountElement.textContent = `Ragadozók (oroszlánok): ${carnivoreCount}`;
+}
+
 function update() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -188,6 +207,7 @@ function update() {
                 }
             }
         }
+        updateCounts();
     }
 
     // Check if any entity type is exhausted

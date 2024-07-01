@@ -280,11 +280,18 @@ canvas.addEventListener('click', function (event) {
 
     console.log(`Click at (${x}, ${y})`);
 
+    const hitboxMargin = 100; // Increase the hitbox size
+
     for (let i = entities.length - 1; i >= 0; i--) {
         const entity = entities[i];
-        console.log(`Entity: ${entity.type} at (${entity.x}, ${entity.y})`);
+        const left = entity.x - hitboxMargin;
+        const right = entity.x + entity.size + hitboxMargin;
+        const top = entity.y - hitboxMargin;
+        const bottom = entity.y + entity.size + hitboxMargin;
 
-        if (x > entity.x && x < entity.x + entity.size && y > entity.y && y < entity.y + entity.size) {
+        console.log(`Entity: ${entity.type} at (${entity.x}, ${entity.y}) with expanded boundaries: left=${left}, right=${right}, top=${top}, bottom=${bottom}`);
+
+        if (x > left && x < right && y > top && y < bottom) {
             console.log(`Clicked on ${entity.type}`);
             if (entity.type === 'herbivore' || entity.type === 'carnivore') {
                 entities.splice(i, 1);
@@ -294,6 +301,8 @@ canvas.addEventListener('click', function (event) {
         }
     }
 });
+
+
 
 Promise.all(Object.values(images).map(img => new Promise(resolve => {
     if (img.complete) {

@@ -124,6 +124,7 @@ function update() {
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
                         // Carnivore eats herbivore
                         entities.splice(j, 1);
+                        addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
 
                     } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
                         // Herbivores meet
@@ -135,10 +136,10 @@ function update() {
                             entities.push(newHerbivore);
                             entity.meetCounter = 0;
                             other.meetCounter = 0;
+                            addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
+
                         }
-
-                        addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
-
+                        
                     }
                     else if (entity.type === 'carnivore' && other.type === 'carnivore') {
                         // Carnivore meet
@@ -150,10 +151,8 @@ function update() {
                             entities.push(newCarnivore);
                             entity.meetCounter = 0;
                             other.meetCounter = 0;
+                            addMessage(new Date().toLocaleTimeString() + " Az oroszlánok szaporodtak.");
                         }
-
-                        addMessage(new Date().toLocaleTimeString() + " Az oroszlánok szaporodtak.");
-
                     }
                 }
             }

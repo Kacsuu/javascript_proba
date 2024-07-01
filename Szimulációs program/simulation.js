@@ -1,7 +1,6 @@
 const canvas = document.getElementById('simulationCanvas');
 const ctx = canvas.getContext('2d');
 const messagesDiv = document.getElementById('messages');
-
 const crosshair = document.getElementById('crosshair');
 
 const canvasWidth = canvas.width;
@@ -19,7 +18,7 @@ const images = {
     carnivore: new Image()
 };
 
-canvas.addEventListener('mousemove', function(event) {
+canvas.addEventListener('mousemove', function (event) {
     crosshair.style.display = 'block';
 
     const rect = canvas.getBoundingClientRect();
@@ -30,7 +29,7 @@ canvas.addEventListener('mousemove', function(event) {
     crosshair.style.top = `${y}px`;
 });
 
-canvas.addEventListener('mouseleave', function() {
+canvas.addEventListener('mouseleave', function () {
     crosshair.style.display = 'none';
 });
 
@@ -56,39 +55,36 @@ class Entity {
         const img = images[this.type];
         ctx.drawImage(img, this.x, this.y, this.size, this.size);
     }
-    
+
     move() {
         const maxSpeed = 3;
         if (this.type !== 'plant') {
             if (this.persistenceCounter <= 0) {
-                // Change direction
                 this.directionX = Math.random() * 2 - 1;
                 this.directionY = Math.random() * 2 - 1;
                 this.persistenceCounter = this.directionPersistence;
             }
-    
-            // Move in the current direction
+
             this.x += this.directionX * maxSpeed;
             this.y += this.directionY * maxSpeed;
-    
-            // Check and correct if out of bounds
+
             if (this.x < 0) {
                 this.x = 0;
                 this.directionX = -this.directionX;
             }
             if (this.x > canvasWidth - this.size) {
                 this.x = canvasWidth - this.size;
-                this.directionX = -this.directionX; 
+                this.directionX = -this.directionX;
             }
             if (this.y < 0) {
                 this.y = 0;
-                this.directionY = -this.directionY; 
+                this.directionY = -this.directionY;
             }
             if (this.y > canvasHeight - this.size) {
                 this.y = canvasHeight - this.size;
-                this.directionY = -this.directionY; 
+                this.directionY = -this.directionY;
             }
-    
+
             this.persistenceCounter--;
         }
     }
@@ -131,12 +127,10 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
         addEntities('herbivore', herbivoreCount);
         addEntities('carnivore', carnivoreCount);
 
-        // Disable input fields and button
         document.getElementById('herbivoreCountInput').disabled = true;
         document.getElementById('carnivoreCountInput').disabled = true;
         document.getElementById('addAnimalsButton').disabled = true;
 
-        // Start the simulation after adding animals
         requestAnimationFrame(update);
     } else {
         alert("Kérem, adjon meg érvényes számot mindkét mezőben!");
@@ -173,22 +167,22 @@ function updateCounts() {
 function getHerbivoreCount() {
     let count = 0;
     entities.forEach(entity => {
-      if (entity.type === 'herbivore') {
-        count++;
-      }
+        if (entity.type === 'herbivore') {
+            count++;
+        }
     });
     return count;
-  }
-  
-  function getCarnivoreCount() {
+}
+
+function getCarnivoreCount() {
     let count = 0;
     entities.forEach(entity => {
-      if (entity.type === 'carnivore') {
-        count++;
-      }
+        if (entity.type === 'carnivore') {
+            count++;
+        }
     });
     return count;
-  }
+}
 
 function update() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -210,14 +204,12 @@ function update() {
             plantCount++;
         }
 
-        // Check if entity has starved
         if (entity.type !== 'plant' && entity.hasStarved()) {
             entities.splice(i, 1);
             addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} éhen halt.`);
             continue;
         }
 
-        // Check for collisions
         for (let j = entities.length - 1; j >= 0; j--) {
             if (i !== j) {
                 const other = entities[j];
@@ -227,37 +219,31 @@ function update() {
                     entity.y + entity.size > other.y) {
 
                     if (entity.type === 'herbivore' && other.type === 'plant') {
-                        // Herbivore eats plant
                         entities.splice(j, 1);
                         entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + " Egy zebra megevett egy füvet.");
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
-                        // Carnivore eats herbivore
                         entities.splice(j, 1);
                         entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
 
-                    } else if (entity.type === 'herbivore' && other.type === 'herbivore'){
-                        // Herbivores meet
+                    } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
                         entity.meetCounter++;
                         other.meetCounter++;
                         if (entity.meetCounter >= 100 && other.meetCounter >= 100) {
                             if (getHerbivoreCount() < MAX_HERBIVORE_COUNT) {
-                            // Herbivores breed
-                            const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
-                            entities.push(newHerbivore);
-                            entity.meetCounter = 0;
-                            other.meetCounter = 0;
-                            addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
+                                const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
+                                entities.push(newHerbivore);
+                                entity.meetCounter = 0;
+                                other.meetCounter = 0;
+                                addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
                             }
                         }
 
-                    } else if (entity.type === 'carnivore' && other.type === 'carnivore'){
-                        // Carnivores meet
+                    } else if (entity.type === 'carnivore' && other.type === 'carnivore') {
                         entity.meetCounter++;
                         other.meetCounter++;
                         if (entity.meetCounter >= 200 && other.meetCounter >= 200 && getCarnivoreCount() < MAX_CARNIVORE_COUNT) {
-                            // Carnivores breed
                             const newCarnivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore');
                             entities.push(newCarnivore);
                             entity.meetCounter = 0;
@@ -271,7 +257,6 @@ function update() {
         updateCounts();
     }
 
-    // Check if any entity type is exhausted
     if (plantCount === 0) {
         addMessage("Nincs több fű. A szimuláció véget ért.");
         return;
@@ -288,7 +273,28 @@ function update() {
     requestAnimationFrame(update);
 }
 
-// Betöltés figyelése
+canvas.addEventListener('click', function (event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    console.log(`Click at (${x}, ${y})`);
+
+    for (let i = entities.length - 1; i >= 0; i--) {
+        const entity = entities[i];
+        console.log(`Entity: ${entity.type} at (${entity.x}, ${entity.y})`);
+
+        if (x > entity.x && x < entity.x + entity.size && y > entity.y && y < entity.y + entity.size) {
+            console.log(`Clicked on ${entity.type}`);
+            if (entity.type === 'herbivore' || entity.type === 'carnivore') {
+                entities.splice(i, 1);
+                addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} meghalt egy kattintásra.`);
+                break;
+            }
+        }
+    }
+});
+
 Promise.all(Object.values(images).map(img => new Promise(resolve => {
     if (img.complete) {
         resolve();
@@ -296,5 +302,5 @@ Promise.all(Object.values(images).map(img => new Promise(resolve => {
         img.onload = resolve;
     }
 }))).then(() => {
-    // Minden betöltve, de a szimuláció nem indul automatikusan
+    // All images are loaded, but the simulation does not start automatically
 });

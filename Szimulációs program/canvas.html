@@ -63,6 +63,7 @@
                     <label for="carnivoreCountInput" class="ml-3">Ragadozók száma:</label>
                     <input type="number" id="carnivoreCountInput" class="form-control d-inline-block w-auto" value="1">
                     <button id="addAnimalsButton" class="btn btn-primary ml-3">Állatok hozzáadása</button>
+                    <button id="resetButton" class="btn btn-secondary ml-3">Reset</button>
                 </div>
             </div>
             <div class="col-md-4">
@@ -75,6 +76,11 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('resetButton').addEventListener('click', function () {
+            location.reload();
+        });
+    </script>
     <script src="simulation.js"></script>
 </body>
 

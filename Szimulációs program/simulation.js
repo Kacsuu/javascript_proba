@@ -57,19 +57,19 @@ class Entity {
             // Check and correct if out of bounds
             if (this.x < 0) {
                 this.x = 0;
-                this.directionX = -this.directionX; // Reverse direction on X-axis
+                this.directionX = -this.directionX;
             }
             if (this.x > canvasWidth - this.size) {
                 this.x = canvasWidth - this.size;
-                this.directionX = -this.directionX; // Reverse direction on X-axis
+                this.directionX = -this.directionX; 
             }
             if (this.y < 0) {
                 this.y = 0;
-                this.directionY = -this.directionY; // Reverse direction on Y-axis
+                this.directionY = -this.directionY; 
             }
             if (this.y > canvasHeight - this.size) {
                 this.y = canvasHeight - this.size;
-                this.directionY = -this.directionY; // Reverse direction on Y-axis
+                this.directionY = -this.directionY; 
             }
     
             this.persistenceCounter--;

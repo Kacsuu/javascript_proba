@@ -15,7 +15,7 @@ Az alkalmazásnak a következő funkciókkal kell rendelkeznie:
 - **Növények kezelése:** Növények véletlenszerűen jelennek meg a képernyőn, és statikus pozícióban maradnak.
 - **Növényevők kezelése:** A növényevők véletlenszerűen mozognak a képernyőn. Amikor egy növényevő növényre talál, megeszi azt, és a növény eltűnik.
 - **Ragadozók kezelése:** A ragadozók véletlenszerűen mozognak a képernyőn. Amikor egy ragadozó növényevőre talál, megeszi azt, és a növényevő eltűnik.
-- **Új egyedek létrehozása:** Amikor két azonos típusú állat (két növényevő vagy két ragadozó) találkozik, egy újabb állat jön létre.
+- **Új egyedek létrehozása:** Amikor két azonos típusú állat (két növényevő vagy két ragadozó) találkozik, egy újabb állat jön létre. Fontos, hogy a növényevők csak az 5., míg a ragadozók a 7. találkozásuknál szaporodnak csak.
 - **Gombok:** A felhasználók gombok segítségével új növényeket, növényevőket és ragadozókat adhatnak hozzá.
 
 ## 3. Funkcionális követelmények

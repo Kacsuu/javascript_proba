@@ -82,6 +82,14 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     const carnivoreCount = parseInt(document.getElementById('carnivoreCountInput').value, 10);
     addEntities('herbivore', herbivoreCount);
     addEntities('carnivore', carnivoreCount);
+
+    // Letiltjuk a bemeneti mezőket és a gombot
+    document.getElementById('herbivoreCountInput').disabled = true;
+    document.getElementById('carnivoreCountInput').disabled = true;
+    document.getElementById('addAnimalsButton').disabled = true;
+
+    // Elindítjuk a szimulációt az állatok hozzáadása után
+    update();
 });
 
 // Function to grow new plants
@@ -121,7 +129,7 @@ function update() {
                         // Herbivores meet
                         entity.meetCounter++;
                         other.meetCounter++;
-                        if (entity.meetCounter >= 5 && other.meetCounter >= 5) {
+                        if (entity.meetCounter >= 3 && other.meetCounter >= 3) {
                             // Herbivores breed
                             const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
                             entities.push(newHerbivore);
@@ -129,7 +137,22 @@ function update() {
                             other.meetCounter = 0;
                         }
 
-                        addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
+                        addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
+
+                    }
+                    else if (entity.type === 'carnivore' && other.type === 'carnivore') {
+                        // Carnivore meet
+                        entity.meetCounter++;
+                        other.meetCounter++;
+                        if (entity.meetCounter >= 10 && other.meetCounter >= 10) {
+                            // Carnivore breed
+                            const newCarnivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore');
+                            entities.push(newCarnivore);
+                            entity.meetCounter = 0;
+                            other.meetCounter = 0;
+                        }
+
+                        addMessage(new Date().toLocaleTimeString() + " Az oroszlánok szaporodtak.");
 
                     }
                 }

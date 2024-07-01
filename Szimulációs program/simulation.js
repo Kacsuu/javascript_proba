@@ -143,7 +143,6 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     }
 });
 
-// Function to grow new plants
 function growPlant() {
     const newPlant = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'plant');
     entities.push(newPlant);

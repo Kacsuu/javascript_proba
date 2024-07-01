@@ -46,6 +46,14 @@
             overflow-y: auto;
             background-color: #dadada;
         }
+
+        #currentCounts {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid black;
+            width: 200px;
+            background-color: #ffffff;
+        }
     </style>
 </head>
 
@@ -59,6 +67,12 @@
     <button id="addAnimalsButton">Állatok hozzáadása</button>
 
     <div id="messages"></div>
+
+    <div id="currentCounts">
+        <p>Aktuális állatok száma:</p>
+        <p id="herbivoreCount">Növényevők (zebrák): 0</p>
+        <p id="carnivoreCount">Ragadozók (oroszlánok): 0</p>
+    </div>
 
     <script src="simulation.js"></script>
 </body>

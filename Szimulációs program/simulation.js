@@ -29,23 +29,40 @@ class Entity {
         this.size = 40;
         this.lastAte = Date.now();
         this.meetCounter = 0;
+        this.directionX = Math.random() * 2 - 1; // Random initial direction for X
+        this.directionY = Math.random() * 2 - 1; // Random initial direction for Y
+        this.directionPersistence = 30; // Number of updates to keep moving in the same direction
+        this.persistenceCounter = 0; // Counter for direction persistence
     }
 
     draw() {
         const img = images[this.type];
         ctx.drawImage(img, this.x, this.y, this.size, this.size);
     }
-
+    
     move() {
+        const maxSpeed = 3;
         if (this.type !== 'plant') {
-            this.x += Math.random() * 10 - 5;
-            this.y += Math.random() * 10 - 5;
+            if (this.persistenceCounter <= 0) {
+                // Change direction
+                this.directionX = Math.random() * 2 - 1;
+                this.directionY = Math.random() * 2 - 1;
+                this.persistenceCounter = this.directionPersistence;
+            }
+
+            // Move in the current direction
+            this.x += this.directionX * maxSpeed;
+            this.y += this.directionY * maxSpeed;
 
             // Keep within bounds
-            if (this.x < 0) this.x = 0;
-            if (this.x > canvasWidth - this.size) this.x = canvasWidth - this.size;
-            if (this.y < 0) this.y = 0;
-            if (this.y > canvasHeight - this.size) this.y = canvasHeight - this.size;
+            if (this.x < 0 || this.x > canvasWidth - this.size ||
+                this.y < 0 || this.y > canvasHeight - this.size) {
+                // Reverse direction if out of bounds
+                this.directionX = -this.directionX;
+                this.directionY = -this.directionY;
+            }
+
+            this.persistenceCounter--;
         }
     }
 
@@ -212,7 +229,7 @@ function update() {
                         // Carnivores meet
                         entity.meetCounter++;
                         other.meetCounter++;
-                        if (entity.meetCounter >= 10 && other.meetCounter >= 10 && getCarnivoreCount() < MAX_CARNIVORE_COUNT) {
+                        if (entity.meetCounter >= 200 && other.meetCounter >= 200 && getCarnivoreCount() < MAX_CARNIVORE_COUNT) {
                             // Carnivores breed
                             const newCarnivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore');
                             entities.push(newCarnivore);

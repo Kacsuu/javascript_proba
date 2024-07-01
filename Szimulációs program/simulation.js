@@ -26,6 +26,7 @@ class Entity {
         this.y = y;
         this.type = type;
         this.size = 40;
+        this.lastAte = Date.now();
     }
 
     draw() {
@@ -44,6 +45,14 @@ class Entity {
             if (this.y < 0) this.y = 0;
             if (this.y > canvasHeight - this.size) this.y = canvasHeight - this.size;
         }
+    }
+
+    hasStarved() {
+        return Date.now() - this.lastAte > 20000;
+    }
+
+    updateLastAte() {
+        this.lastAte = Date.now();
     }
 }
 
@@ -108,6 +117,14 @@ function update() {
         entity.move();
         entity.draw();
 
+
+        // Check if entity has starved
+        if (entity.type !== 'plant' && entity.hasStarved()) {
+            entities.splice(i, 1);
+            addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} éhen halt.`);
+            continue;
+        }
+
         // Check for collisions
         for (let j = entities.length - 1; j >= 0; j--) {
             if (i !== j) {
@@ -120,10 +137,15 @@ function update() {
                     if (entity.type === 'herbivore' && other.type === 'plant') {
                         // Herbivore eats plant
                         entities.splice(j, 1);
+                        entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + " Egy zebra megevett egy füvet.");
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
                         // Carnivore eats herbivore
                         entities.splice(j, 1);
+<<<<<<< Updated upstream
+=======
+                        entity.updateLastAte();
+>>>>>>> Stashed changes
                         addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
 
                     } else if (entity.type === 'herbivore' && other.type === 'herbivore') {

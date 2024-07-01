@@ -84,6 +84,17 @@ function update() {
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
                         // Carnivore eats herbivore
                         entities.splice(j, 1);
+                    } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
+                        // Herbivores meet
+                        entity.meetCounter++;
+                        other.meetCounter++;
+                        if (entity.meetCounter >= 5 && other.meetCounter >= 5) {
+                            // Herbivores breed
+                            const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
+                            entities.push(newHerbivore);
+                            entity.meetCounter = 0;
+                            other.meetCounter = 0;
+                        }
                     }
                 }
             }

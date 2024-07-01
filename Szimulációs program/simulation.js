@@ -6,7 +6,7 @@ const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
 const plantCount = 20;
-const plantGrowthInterval = 2000;
+const plantGrowthInterval = 500;
 
 const MAX_HERBIVORE_COUNT = 20;
 const MAX_CARNIVORE_COUNT = 10;

@@ -6,8 +6,6 @@ const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
 const plantCount = 20;
-const herbivoreCount = 10;
-const carnivoreCount = 5;
 const plantGrowthInterval = 2000;
 
 const images = {
@@ -70,16 +68,6 @@ for (let i = 0; i < plantCount; i++) {
     entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'plant'));
 }
 
-// Generate herbivores
-for (let i = 0; i < herbivoreCount; i++) {
-    entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore'));
-}
-
-// Generate carnivores
-for (let i = 0; i < carnivoreCount; i++) {
-    entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore'));
-}
-
 function addEntities(type, count) {
     for (let i = 0; i < count; i++) {
         const x = Math.random() * canvasWidth;
@@ -91,16 +79,21 @@ function addEntities(type, count) {
 document.getElementById('addAnimalsButton').addEventListener('click', () => {
     const herbivoreCount = parseInt(document.getElementById('herbivoreCountInput').value, 10);
     const carnivoreCount = parseInt(document.getElementById('carnivoreCountInput').value, 10);
-    addEntities('herbivore', herbivoreCount);
-    addEntities('carnivore', carnivoreCount);
 
-    // Disable input fields and button
-    document.getElementById('herbivoreCountInput').disabled = true;
-    document.getElementById('carnivoreCountInput').disabled = true;
-    document.getElementById('addAnimalsButton').disabled = true;
+    if (herbivoreCount > 0 && carnivoreCount > 0) {
+        addEntities('herbivore', herbivoreCount);
+        addEntities('carnivore', carnivoreCount);
 
-    // Start the simulation after adding animals
-    update();
+        // Disable input fields and button
+        document.getElementById('herbivoreCountInput').disabled = true;
+        document.getElementById('carnivoreCountInput').disabled = true;
+        document.getElementById('addAnimalsButton').disabled = true;
+
+        // Start the simulation after adding animals
+        requestAnimationFrame(update);
+    } else {
+        alert("Kérem, adjon meg érvényes számot mindkét mezőben!");
+    }
 });
 
 // Function to grow new plants
@@ -227,10 +220,13 @@ function update() {
     requestAnimationFrame(update);
 }
 
+// Betöltés figyelése
 Promise.all(Object.values(images).map(img => new Promise(resolve => {
     if (img.complete) {
         resolve();
     } else {
         img.onload = resolve;
     }
-}))).then(update);
+}))).then(() => {
+    // Minden betöltve, de a szimuláció nem indul automatikusan
+});

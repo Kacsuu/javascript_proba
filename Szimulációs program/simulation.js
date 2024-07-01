@@ -2,6 +2,8 @@ const canvas = document.getElementById('simulationCanvas');
 const ctx = canvas.getContext('2d');
 const messagesDiv = document.getElementById('messages');
 
+const crosshair = document.getElementById('crosshair');
+
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
@@ -16,6 +18,21 @@ const images = {
     herbivore: new Image(),
     carnivore: new Image()
 };
+
+canvas.addEventListener('mousemove', function(event) {
+    crosshair.style.display = 'block';
+
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left - (crosshair.width / 2);
+    const y = event.clientY - rect.top - (crosshair.height / 2);
+
+    crosshair.style.left = `${x}px`;
+    crosshair.style.top = `${y}px`;
+});
+
+canvas.addEventListener('mouseleave', function() {
+    crosshair.style.display = 'none';
+});
 
 images.plant.src = 'Images/grass.png';
 images.herbivore.src = 'Images/zebra.png';

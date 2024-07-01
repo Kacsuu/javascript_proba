@@ -17,7 +17,8 @@
 
         canvas {
             border: 1px solid black;
-            background-image: url('Images/background.jpg'); 
+            background-image: url('Images/background.jpg');
+            cursor: none;
         }
 
         .plant {
@@ -50,6 +51,14 @@
             border: 1px solid black;
             background-color: #ffffff;
         }
+
+        #crosshair {
+            height: 50px;
+            width: 50px;
+            position: absolute;
+            display: none;
+            cursor: none;
+        }
     </style>
 </head>
 
@@ -58,6 +67,7 @@
         <div class="row">
             <div class="col-md-8">
                 <canvas id="simulationCanvas" width="800" height="600" class="w-100"></canvas>
+                <img id="crosshair" src="Images/crosshair.png" alt="Crosshair">
                 <div class="form-group mt-3">
                     <label for="herbivoreCountInput">Növényevők száma:</label>
                     <input type="number" id="herbivoreCountInput" class="form-control d-inline-block w-auto" value="1">

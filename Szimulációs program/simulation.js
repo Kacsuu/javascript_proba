@@ -49,19 +49,29 @@ class Entity {
                 this.directionY = Math.random() * 2 - 1;
                 this.persistenceCounter = this.directionPersistence;
             }
-
+    
             // Move in the current direction
             this.x += this.directionX * maxSpeed;
             this.y += this.directionY * maxSpeed;
-
-            // Keep within bounds
-            if (this.x < 0 || this.x > canvasWidth - this.size ||
-                this.y < 0 || this.y > canvasHeight - this.size) {
-                // Reverse direction if out of bounds
-                this.directionX = -this.directionX;
-                this.directionY = -this.directionY;
+    
+            // Check and correct if out of bounds
+            if (this.x < 0) {
+                this.x = 0;
+                this.directionX = -this.directionX; // Reverse direction on X-axis
             }
-
+            if (this.x > canvasWidth - this.size) {
+                this.x = canvasWidth - this.size;
+                this.directionX = -this.directionX; // Reverse direction on X-axis
+            }
+            if (this.y < 0) {
+                this.y = 0;
+                this.directionY = -this.directionY; // Reverse direction on Y-axis
+            }
+            if (this.y > canvasHeight - this.size) {
+                this.y = canvasHeight - this.size;
+                this.directionY = -this.directionY; // Reverse direction on Y-axis
+            }
+    
             this.persistenceCounter--;
         }
     }

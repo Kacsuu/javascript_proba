@@ -106,7 +106,7 @@ function update() {
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
                         // Carnivore eats herbivore
                         entities.splice(j, 1);
-<<<<<<< Updated upstream
+
                     } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
                         // Herbivores meet
                         entity.meetCounter++;
@@ -118,9 +118,9 @@ function update() {
                             entity.meetCounter = 0;
                             other.meetCounter = 0;
                         }
-=======
+
                         addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
->>>>>>> Stashed changes
+
                     }
                 }
             }

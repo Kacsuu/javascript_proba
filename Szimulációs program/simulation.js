@@ -193,25 +193,26 @@ function update() {
                         entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
 
-                    } else if (entity.type === 'herbivore' && other.type === 'herbivore' && getHerbivoreCount() < MAX_HERBIVORE_COUNT){
+                    } else if (entity.type === 'herbivore' && other.type === 'herbivore'){
                         // Herbivores meet
                         entity.meetCounter++;
                         other.meetCounter++;
-                        if (entity.meetCounter >= 10 && other.meetCounter >= 10 && herbivoreCount < 20) {
+                        if (entity.meetCounter >= 100 && other.meetCounter >= 100) {
+                            if (getHerbivoreCount() < MAX_HERBIVORE_COUNT) {
                             // Herbivores breed
                             const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
                             entities.push(newHerbivore);
                             entity.meetCounter = 0;
                             other.meetCounter = 0;
                             addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
-
+                            }
                         }
 
-                    } else if (entity.type === 'carnivore' && other.type === 'carnivore') {
+                    } else if (entity.type === 'carnivore' && other.type === 'carnivore'){
                         // Carnivores meet
                         entity.meetCounter++;
                         other.meetCounter++;
-                        if (entity.meetCounter >= 10 && other.meetCounter >= 10 && carnivoreCount < 10) {
+                        if (entity.meetCounter >= 10 && other.meetCounter >= 10 && getCarnivoreCount() < MAX_CARNIVORE_COUNT) {
                             // Carnivores breed
                             const newCarnivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore');
                             entities.push(newCarnivore);

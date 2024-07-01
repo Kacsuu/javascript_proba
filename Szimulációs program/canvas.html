@@ -26,8 +26,12 @@
 
 <body>
     <canvas id="simulationCanvas" width="800" height="600"></canvas>
-    <button id="addHerbivoreButton">Növény hozzáadása</button>
-    <button id="addCarnivoreButton">Ragadozó hozzáadása</button>
+    <br>
+    <label for="herbivoreCountInput">Növényevők száma:</label>
+    <input type="number" id="herbivoreCountInput" value="1">
+    <label for="carnivoreCountInput">Ragadozók száma:</label>
+    <input type="number" id="carnivoreCountInput" value="1">
+    <button id="addAnimalsButton">Állatok hozzáadása</button>
     <script src="simulation.js"></script>
 </body>
 

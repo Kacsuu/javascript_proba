@@ -17,9 +17,9 @@ const images = {
     carnivore: new Image()
 };
 
-images.plant.src = 'Icons/grass.png'; // Path to your grass image
-images.herbivore.src = 'Icons/zebra.png'; // Path to your zebra image
-images.carnivore.src = 'Icons/lion.png'; // Path to your lion image
+images.plant.src = 'Images/grass.png';
+images.herbivore.src = 'Images/zebra.png';
+images.carnivore.src = 'Images/lion.png';
 
 class Entity {
     constructor(x, y, type) {
@@ -29,10 +29,10 @@ class Entity {
         this.size = 40;
         this.lastAte = Date.now();
         this.meetCounter = 0;
-        this.directionX = Math.random() * 2 - 1; // Random initial direction for X
-        this.directionY = Math.random() * 2 - 1; // Random initial direction for Y
-        this.directionPersistence = 30; // Number of updates to keep moving in the same direction
-        this.persistenceCounter = 0; // Counter for direction persistence
+        this.directionX = Math.random() * 2 - 1;
+        this.directionY = Math.random() * 2 - 1;
+        this.directionPersistence = 30;
+        this.persistenceCounter = 0;
     }
 
     draw() {

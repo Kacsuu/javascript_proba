@@ -72,6 +72,14 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     const carnivoreCount = parseInt(document.getElementById('carnivoreCountInput').value, 10);
     addEntities('herbivore', herbivoreCount);
     addEntities('carnivore', carnivoreCount);
+
+    // Letiltjuk a bemeneti mezőket és a gombot
+    document.getElementById('herbivoreCountInput').disabled = true;
+    document.getElementById('carnivoreCountInput').disabled = true;
+    document.getElementById('addAnimalsButton').disabled = true;
+
+    // Elindítjuk a szimulációt az állatok hozzáadása után
+    update();
 });
 
 // Function to grow new plants
@@ -115,6 +123,21 @@ function update() {
                             // Herbivores breed
                             const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
                             entities.push(newHerbivore);
+                            entity.meetCounter = 0;
+                            other.meetCounter = 0;
+                        }
+
+                        addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
+
+                    }
+                    else if (entity.type === 'carnivore' && other.type === 'carnivore') {
+                        // Carnivore meet
+                        entity.meetCounter++;
+                        other.meetCounter++;
+                        if (entity.meetCounter >= 7 && other.meetCounter >= 7) {
+                            // Carnivore breed
+                            const newCarnivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore');
+                            entities.push(newCarnivore);
                             entity.meetCounter = 0;
                             other.meetCounter = 0;
                         }

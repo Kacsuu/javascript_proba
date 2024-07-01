@@ -52,6 +52,13 @@ for (let i = 0; i < herbivoreCount; i++) {
 for (let i = 0; i < carnivoreCount; i++) {
     entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore'));
 }
+function addEntity(type){
+    const x = Math.random() * canvasWidth;
+    const y = Math.random() * canvasHeight;
+    entities.push(new Entity(x,y,type));
+}
+document.getElementById('addHerbivoreButton').addEventListener('click', () => addEntity('herbivore'));
+document.getElementById('addCarnivoreButton').addEventListener('click', () => addEntity('carnivore'));
 
 // Function to grow new plants
 function growPlant() {

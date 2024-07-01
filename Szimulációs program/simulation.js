@@ -7,6 +7,7 @@ const canvasHeight = canvas.height;
 const plantCount = 20;
 const herbivoreCount = 10;
 const carnivoreCount = 5;
+const plantGrowthInterval = 2000;
 
 class Entity {
     constructor(x, y, type) {
@@ -58,6 +59,14 @@ function addEntity(type){
 }
 document.getElementById('addHerbivoreButton').addEventListener('click', () => addEntity('herbivore'));
 document.getElementById('addCarnivoreButton').addEventListener('click', () => addEntity('carnivore'));
+
+// Function to grow new plants
+function growPlant() {
+    const newPlant = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'plant');
+    entities.push(newPlant);
+}
+
+setInterval(growPlant, plantGrowthInterval);
 
 function update() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);

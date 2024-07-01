@@ -142,10 +142,7 @@ function update() {
                     } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
                         // Carnivore eats herbivore
                         entities.splice(j, 1);
-<<<<<<< Updated upstream
-=======
                         entity.updateLastAte();
->>>>>>> Stashed changes
                         addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
 
                     } else if (entity.type === 'herbivore' && other.type === 'herbivore') {

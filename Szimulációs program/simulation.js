@@ -72,6 +72,14 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     const carnivoreCount = parseInt(document.getElementById('carnivoreCountInput').value, 10);
     addEntities('herbivore', herbivoreCount);
     addEntities('carnivore', carnivoreCount);
+
+    // Letiltjuk a bemeneti mezőket és a gombot
+    document.getElementById('herbivoreCountInput').disabled = true;
+    document.getElementById('carnivoreCountInput').disabled = true;
+    document.getElementById('addAnimalsButton').disabled = true;
+
+    // Elindítjuk a szimulációt az állatok hozzáadása után
+    update();
 });
 
 // Function to grow new plants

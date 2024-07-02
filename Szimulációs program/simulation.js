@@ -56,8 +56,23 @@ class Entity {
         ctx.drawImage(img, this.x, this.y, this.size, this.size);
     }
 
+    debugDraw() {
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+        ctx.lineWidth = 2;
+        entities.forEach(entity => {
+            // Skip drawing hitbox for plants
+            if (entity.type === 'plant') return;
+    
+            const left = entity.x - hitboxMargin;
+            const top = entity.y - hitboxMargin;
+            const width = entity.size + 2 * hitboxMargin;
+            const height = entity.size + 2 * hitboxMargin;
+            ctx.strokeRect(left, top, width, height);
+        });
+    }
+
     move() {
-        const maxSpeed = 3;
+        const maxSpeed = 0.5;
         if (this.type !== 'plant') {
             if (this.persistenceCounter <= 0) {
                 this.directionX = Math.random() * 2 - 1;
@@ -196,6 +211,19 @@ function update() {
         entity.move();
         entity.draw();
 
+        if (entity.type !== 'plant') {
+            const hitboxMargin = 10;
+            const left = entity.x - hitboxMargin;
+            const right = entity.x + entity.size + hitboxMargin;
+            const top = entity.y - hitboxMargin;
+            const bottom = entity.y + entity.size + hitboxMargin;
+
+            ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(left, top, right - left, bottom - top);
+        }
+ 
+
         if (entity.type === 'herbivore') {
             herbivoreCount++;
         } else if (entity.type === 'carnivore') {
@@ -274,140 +302,41 @@ function update() {
 }
 
 canvas.addEventListener('click', function (event) {
+    console.log("Canvas clicked!");
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+    console.log(`Click coordinates: (${x}, ${y})`);
 
-    console.log(`Click at (${x}, ${y})`);
-
-    const hitboxMargin = 10; // Increase the hitbox size
+    const hitboxMargin = 10;
 
     for (let i = entities.length - 1; i >= 0; i--) {
         const entity = entities[i];
+        
+        // Skip plants
+        if (entity.type === 'plant') continue;
+
         const left = entity.x - hitboxMargin;
         const right = entity.x + entity.size + hitboxMargin;
         const top = entity.y - hitboxMargin;
         const bottom = entity.y + entity.size + hitboxMargin;
 
-        console.log(`Entity: ${entity.type} at (${entity.x}, ${entity.y}) with expanded boundaries: left=${left}, right=${right}, top=${top}, bottom=${bottom}`);
-
-        // Draw hitbox
-        ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(left, top, right - left, bottom - top);
+        console.log(`Checking entity: ${entity.type} at (${entity.x}, ${entity.y})`);
+        console.log(`Hitbox: left=${left}, right=${right}, top=${top}, bottom=${bottom}`);
 
         if (x > left && x < right && y > top && y < bottom) {
-            console.log(`Clicked on ${entity.type}`);
+            console.log(`Hit detected on ${entity.type}!`);
             if (entity.type === 'herbivore' || entity.type === 'carnivore') {
+                console.log(`Removing ${entity.type}`);
                 entities.splice(i, 1);
                 addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} meghalt egy kattintásra.`);
-                break;
+                updateCounts();
+                return;
             }
         }
     }
+    console.log("No entity was clicked");
 });
-
-function update() {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    let herbivoreCount = 0;
-    let carnivoreCount = 0;
-    let plantCount = 0;
-
-    for (let i = entities.length - 1; i >= 0; i--) {
-        const entity = entities[i];
-        entity.move();
-        entity.draw();
-
-        // Draw hitbox
-        const hitboxMargin = 10;
-        const left = entity.x - hitboxMargin;
-        const right = entity.x + entity.size + hitboxMargin;
-        const top = entity.y - hitboxMargin;
-        const bottom = entity.y + entity.size + hitboxMargin;
-
-        ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(left, top, right - left, bottom - top);
-
-        if (entity.type === 'herbivore') {
-            herbivoreCount++;
-        } else if (entity.type === 'carnivore') {
-            carnivoreCount++;
-        } else if (entity.type === 'plant') {
-            plantCount++;
-        }
-
-        if (entity.type !== 'plant' && entity.hasStarved()) {
-            entities.splice(i, 1);
-            addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} éhen halt.`);
-            continue;
-        }
-
-        for (let j = entities.length - 1; j >= 0; j--) {
-            if (i !== j) {
-                const other = entities[j];
-                if (entity.x < other.x + other.size &&
-                    entity.x + entity.size > other.x &&
-                    entity.y < other.y + other.size &&
-                    entity.y + entity.size > other.y) {
-
-                    if (entity.type === 'herbivore' && other.type === 'plant') {
-                        entities.splice(j, 1);
-                        entity.updateLastAte();
-                        addMessage(new Date().toLocaleTimeString() + " Egy zebra megevett egy füvet.");
-                    } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
-                        entities.splice(j, 1);
-                        entity.updateLastAte();
-                        addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
-
-                    } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
-                        entity.meetCounter++;
-                        other.meetCounter++;
-                        if (entity.meetCounter >= 100 && other.meetCounter >= 100) {
-                            if (getHerbivoreCount() < MAX_HERBIVORE_COUNT) {
-                                const newHerbivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'herbivore');
-                                entities.push(newHerbivore);
-                                entity.meetCounter = 0;
-                                other.meetCounter = 0;
-                                addMessage(new Date().toLocaleTimeString() + " A zebrák szaporodtak.");
-                            }
-                        }
-
-                    } else if (entity.type === 'carnivore' && other.type === 'carnivore') {
-                        entity.meetCounter++;
-                        other.meetCounter++;
-                        if (entity.meetCounter >= 200 && other.meetCounter >= 200 && getCarnivoreCount() < MAX_CARNIVORE_COUNT) {
-                            const newCarnivore = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'carnivore');
-                            entities.push(newCarnivore);
-                            entity.meetCounter = 0;
-                            other.meetCounter = 0;
-                            addMessage(new Date().toLocaleTimeString() + " Az oroszlánok szaporodtak.");
-                        }
-                    }
-                }
-            }
-        }
-        updateCounts();
-    }
-
-    if (plantCount === 0) {
-        addMessage("Nincs több fű. A szimuláció véget ért.");
-        return;
-    }
-    if (herbivoreCount === 0) {
-        addMessage("Nincs több zebra. A szimuláció véget ért.");
-        return;
-    }
-    if (carnivoreCount === 0) {
-        addMessage("Nincs több oroszlán. A szimuláció véget ért.");
-        return;
-    }
-
-    requestAnimationFrame(update);
-}
-
-
 
 Promise.all(Object.values(images).map(img => new Promise(resolve => {
     if (img.complete) {

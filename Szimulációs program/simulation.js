@@ -172,18 +172,18 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     if (herbivoreCount > 0 && carnivoreCount > 0) {
         let randomNum = 0;
         console.log(randomNum);
-        for(let i = 0; i < herbivoreCount; i++){
-             randomNum = Math.random();
-            if(randomNum < 0.5){
+        for (let i = 0; i < herbivoreCount; i++) {
+            randomNum = Math.random();
+            if (randomNum < 0.5) {
                 addEntities('herbivore', 1);
-                
+
             }
-            else if(randomNum >= 0.5){
+            else if (randomNum >= 0.5) {
                 addEntities('gazelle', 1);
             }
         }
-            
-        
+
+
         addEntities('carnivore', carnivoreCount);
 
         document.getElementById('herbivoreCountInput').disabled = true;
@@ -277,13 +277,12 @@ function update() {
                     entity.y < other.y + other.size &&
                     entity.y + entity.size > other.y) {
 
-                    if ((entity.type === 'herbivore' || entity.type === 'gazelle')
-                        && other.type === 'plant' && other.type !== 'rock' && other.type !== 'herbivore' && other.type !== 'gazelle' && other.type !== 'carnivore') {
+                    if ((entity.type === 'herbivore' || entity.type === 'gazelle') && other.type === 'plant') {
                         entities.splice(j, 1);
                         entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + ` Egy 
                         ${entity.type === 'herbivore' ? 'zebra' : 'gazella'} megevett egy füvet.`);
-                    } else if (entity.type === 'carnivore' && other.type === 'herbivore' || other.type === 'gazelle') {
+                    } else if (entity.type === 'carnivore' && (other.type === 'herbivore' || other.type === 'gazelle')) {
                         entities.splice(j, 1);
                         entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + ` Egy oroszlán megevett egy 

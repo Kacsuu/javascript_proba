@@ -302,17 +302,21 @@ function update() {
 }
 
 canvas.addEventListener('click', function (event) {
-    console.log("Canvas clicked!");
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = (event.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (event.clientY - rect.top) * (canvas.height / rect.height);
+
     console.log(`Click coordinates: (${x}, ${y})`);
 
+    handleCanvasClick(x, y);
+});
+
+function handleCanvasClick(x, y) {
     const hitboxMargin = 10;
 
     for (let i = entities.length - 1; i >= 0; i--) {
         const entity = entities[i];
-        
+
         // Skip plants
         if (entity.type === 'plant') continue;
 
@@ -336,7 +340,9 @@ canvas.addEventListener('click', function (event) {
         }
     }
     console.log("No entity was clicked");
-});
+}
+
+
 
 Promise.all(Object.values(images).map(img => new Promise(resolve => {
     if (img.complete) {

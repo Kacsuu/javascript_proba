@@ -7,60 +7,8 @@
     <title>Szimulációs Program</title>
     <link rel="icon" href="Images/grass.png" type="image/x-icon">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <style>
-        body {
-            margin-top: 10px;
-            background-color: rgb(201, 243, 248);
-        }
-
-        canvas {
-            border: 1px solid black;
-            background-image: url('Images/background.jpg');
-            cursor: none;
-        }
-
-        .plant {
-            background-image: url('Images/grass.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-
-        .herbivore {
-            background-image: url('Images/zebra.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-
-        .carnivore {
-            background-image: url('Images/lion.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-
-        #messages {
-            height: 600px;
-            overflow-y: auto;
-            background-color: #dadada;
-        }
-
-        #currentCounts {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid black;
-            background-color: #ffffff;
-        }
-
-        #crosshair {
-            height: 50px;
-            width: 50px;
-            position: absolute;
-            display: none;
-            cursor: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -69,14 +17,6 @@
             <div class="col-md-8">
                 <canvas id="simulationCanvas" width="800" height="600" class="w-100"></canvas>
                 <img id="crosshair" src="Images/crosshair.png" alt="Crosshair">
-                <div class="form-group mt-3">
-                    <label for="herbivoreCountInput">Növényevők száma:</label>
-                    <input type="number" id="herbivoreCountInput" class="form-control d-inline-block w-auto" value="1">
-                    <label for="carnivoreCountInput" class="ml-3">Ragadozók száma:</label>
-                    <input type="number" id="carnivoreCountInput" class="form-control d-inline-block w-auto" value="1">
-                    <button id="addAnimalsButton" class="btn btn-primary ml-3">Állatok hozzáadása</button>
-                    <button id="resetButton" class="btn btn-secondary ml-3 mt-3 mt-md-0">Újraindítás</button>
-                </div>
             </div>
             <div class="col-md-4">
                 <div id="messages" class="p-3 border"></div>
@@ -84,6 +24,20 @@
                     <p>Aktuális állatok száma:</p>
                     <p id="herbivoreCount">Növényevők (zebrák): 0</p>
                     <p id="carnivoreCount">Ragadozók (oroszlánok): 0</p>
+                </div>
+                <div class="class">
+                    <div class ="herbscarns">
+                        <label for="herbivoreCountInput">Növényevők száma:</label>
+                        <input type="number" id="herbivoreCountInput" class="herbivoreBox" type="input" value="1">
+                        <label for="carnivoreCountInput" class="ml-3">Ragadozók száma:</label>
+                        <input type="number" id="carnivoreCountInput" class="carnivoreBox" type="input" value="1">  
+                    </div>
+                    <div class="buttons">
+                        <button id="addAnimalsButton" class="addAnimals">Állatok hozzáadása</button>
+                        <button id="resetButton" class="resetSimulation">Újraindítás</button>
+                    </div>
+
+
                 </div>
             </div>
         </div>

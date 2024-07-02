@@ -35,10 +35,9 @@ canvas.addEventListener('mouseleave', function () {
 });
 
 images.plant.src = 'Images/grass.png';
+images.carnivore.src = 'Images/lion.png';
 images.herbivore.src = 'Images/zebra.png';
 images.gazelle.src = 'Images/gazelle.png';
-images.carnivore.src = 'Images/lion.png';
-
 class Entity {
     constructor(x, y, type) {
         this.x = x;
@@ -134,8 +133,20 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
     const carnivoreCount = parseInt(document.getElementById('carnivoreCountInput').value, 10);
 
     if (herbivoreCount > 0 && carnivoreCount > 0) {
-        addEntities('herbivore', herbivoreCount);
-        addEntities('gazelle', herbivoreCount);
+        let randomNum = 0;
+        console.log(randomNum);
+        for(let i = 0; i < herbivoreCount; i++){
+             randomNum = Math.random();
+            if(randomNum < 0.5){
+                addEntities('herbivore', 1);
+                
+            }
+            else if(randomNum >= 0.5){
+                addEntities('gazelle', 1);
+            }
+        }
+            
+        
         addEntities('carnivore', carnivoreCount);
 
         document.getElementById('herbivoreCountInput').disabled = true;

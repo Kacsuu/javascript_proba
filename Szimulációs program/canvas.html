@@ -19,6 +19,14 @@
             <div class="col-md-8">
                 <canvas id="simulationCanvas" width="800" height="600" class="w-100"></canvas>
                 <img id="crosshair" src="Images/crosshair.png" alt="Crosshair">
+                <div class ="herbscarns">
+                    <label for="herbivoreCountInput">Növényevők száma:</label>
+                    <input type="number" id="herbivoreCountInput" class="herbivoreBox" type="input" value="1">
+                    <label for="carnivoreCountInput" class="ml-3">Ragadozók száma:</label>
+                    <input type="number" id="carnivoreCountInput" class="carnivoreBox" type="input" value="1">  
+                    <button id="addAnimalsButton" class="addAnimals" style="margin: 5px;">Állatok hozzáadása</button>
+                    <button id="resetButton" class="resetSimulation">Újraindítás</button>
+                </div>
             </div>
             <div class="col-md-4">
                 <div id="messages" class="p-3-border"></div>
@@ -26,20 +34,6 @@
                     <p>Aktuális állatok száma:</p>
                     <p id="herbivoreCount">Növényevők (zebrák, gazellák): 0</p>
                     <p id="carnivoreCount">Ragadozók (oroszlánok): 0</p>
-                </div>
-                <div class="class">
-                    <div class ="herbscarns">
-                        <label for="herbivoreCountInput">Növényevők száma:</label>
-                        <input type="number" id="herbivoreCountInput" class="herbivoreBox" type="input" value="1">
-                        <label for="carnivoreCountInput" class="ml-3">Ragadozók száma:</label>
-                        <input type="number" id="carnivoreCountInput" class="carnivoreBox" type="input" value="1">  
-                    </div>
-                    <div class="buttons">
-                        <button id="addAnimalsButton" class="addAnimals">Állatok hozzáadása</button>
-                        <button id="resetButton" class="resetSimulation">Újraindítás</button>
-                    </div>
-
-
                 </div>
             </div>
         </div>

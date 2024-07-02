@@ -62,7 +62,7 @@ class Entity {
         const img = images[this.type];
         ctx.drawImage(img, this.x, this.y, this.size, this.size);
     }
-    
+
 
     move() {
         const maxSpeed = 3;
@@ -277,7 +277,7 @@ function update() {
             plantCount++;
         }
 
-        if (entity.type !== 'plant' && entity.hasStarved()) {
+        if (entity.type !== 'plant' && entity.type !== 'rock' && entity.hasStarved()) {
             entities.splice(i, 1);
             addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán' ||
                 entity.type === 'gazelle' ? 'gazella' : 'oroszlán'} éhen halt.`);
@@ -292,7 +292,8 @@ function update() {
                     entity.y < other.y + other.size &&
                     entity.y + entity.size > other.y) {
 
-                    if (entity.type === 'herbivore' || entity.type === 'gazelle' && other.type === 'plant') {
+                    if ((entity.type === 'herbivore' || entity.type === 'gazelle')
+                        && other.type === 'plant' && other.type !== 'rock' && other.type !== 'herbivore' && other.type !== 'gazelle' && other.type !== 'carnivore') {
                         entities.splice(j, 1);
                         entity.updateLastAte();
                         addMessage(new Date().toLocaleTimeString() + ` Egy 

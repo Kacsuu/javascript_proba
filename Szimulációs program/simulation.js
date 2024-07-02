@@ -15,6 +15,7 @@ const MAX_CARNIVORE_COUNT = 10;
 const images = {
     plant: new Image(),
     herbivore: new Image(),
+    gazelle: new Image(),
     carnivore: new Image()
 };
 
@@ -35,6 +36,7 @@ canvas.addEventListener('mouseleave', function () {
 
 images.plant.src = 'Images/grass.png';
 images.herbivore.src = 'Images/zebra.png';
+images.gazelle.src = 'Images/gazelle.png';
 images.carnivore.src = 'Images/lion.png';
 
 class Entity {
@@ -58,15 +60,23 @@ class Entity {
 
     move() {
         const maxSpeed = 3;
+        const gazelleSpeed = 4;
+
         if (this.type !== 'plant') {
             if (this.persistenceCounter <= 0) {
                 this.directionX = Math.random() * 2 - 1;
                 this.directionY = Math.random() * 2 - 1;
                 this.persistenceCounter = this.directionPersistence;
             }
+            if (this.type === 'gazelle') {
+                this.x += this.directionX * gazelleSpeed;
+                this.y += this.directionY * gazelleSpeed;
+            }
+            else {
+                this.x += this.directionX * maxSpeed;
+                this.y += this.directionY * maxSpeed;
+            }
 
-            this.x += this.directionX * maxSpeed;
-            this.y += this.directionY * maxSpeed;
 
             if (this.x < 0) {
                 this.x = 0;
@@ -125,6 +135,7 @@ document.getElementById('addAnimalsButton').addEventListener('click', () => {
 
     if (herbivoreCount > 0 && carnivoreCount > 0) {
         addEntities('herbivore', herbivoreCount);
+        addEntities('gazelle', herbivoreCount);
         addEntities('carnivore', carnivoreCount);
 
         document.getElementById('herbivoreCountInput').disabled = true;
@@ -152,21 +163,21 @@ function updateCounts() {
     let carnivoreCount = 0;
 
     entities.forEach(entity => {
-        if (entity.type === 'herbivore') {
+        if (entity.type === 'herbivore' || entity.type === 'gazelle') {
             herbivoreCount++;
         } else if (entity.type === 'carnivore') {
             carnivoreCount++;
         }
     });
 
-    herbivoreCountElement.textContent = `Növényevők (zebrák): ${herbivoreCount}`;
+    herbivoreCountElement.textContent = `Növényevők (zebrák,gazellák): ${herbivoreCount}`;
     carnivoreCountElement.textContent = `Ragadozók (oroszlánok): ${carnivoreCount}`;
 }
 
 function getHerbivoreCount() {
     let count = 0;
     entities.forEach(entity => {
-        if (entity.type === 'herbivore') {
+        if (entity.type === 'herbivore' || entity.type === 'gazelle') {
             count++;
         }
     });
@@ -195,7 +206,7 @@ function update() {
         entity.move();
         entity.draw();
 
-        if (entity.type === 'herbivore') {
+        if (entity.type === 'herbivore' || entity.type === 'gazelle') {
             herbivoreCount++;
         } else if (entity.type === 'carnivore') {
             carnivoreCount++;
@@ -205,7 +216,8 @@ function update() {
 
         if (entity.type !== 'plant' && entity.hasStarved()) {
             entities.splice(i, 1);
-            addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} éhen halt.`);
+            addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán' ||
+                entity.type === 'gazelle' ? 'gazella' : 'oroszlán'} éhen halt.`);
             continue;
         }
 
@@ -217,14 +229,16 @@ function update() {
                     entity.y < other.y + other.size &&
                     entity.y + entity.size > other.y) {
 
-                    if (entity.type === 'herbivore' && other.type === 'plant') {
+                    if (entity.type === 'herbivore' || entity.type === 'gazelle' && other.type === 'plant') {
                         entities.splice(j, 1);
                         entity.updateLastAte();
-                        addMessage(new Date().toLocaleTimeString() + " Egy zebra megevett egy füvet.");
-                    } else if (entity.type === 'carnivore' && other.type === 'herbivore') {
+                        addMessage(new Date().toLocaleTimeString() + ` Egy 
+                        ${entity.type === 'herbivore' ? 'zebra' : 'gazella'} megevett egy füvet.`);
+                    } else if (entity.type === 'carnivore' && other.type === 'herbivore' || other.type === 'gazelle') {
                         entities.splice(j, 1);
                         entity.updateLastAte();
-                        addMessage(new Date().toLocaleTimeString() + " Egy oroszlán megevett egy zebrát.");
+                        addMessage(new Date().toLocaleTimeString() + ` Egy oroszlán megevett egy 
+                        ${entity.type === 'herbivore' ? 'zebrát' : 'gazellát'}.`);
 
                     } else if (entity.type === 'herbivore' && other.type === 'herbivore') {
                         entity.meetCounter++;
@@ -239,7 +253,20 @@ function update() {
                             }
                         }
 
-                    } else if (entity.type === 'carnivore' && other.type === 'carnivore') {
+                    } else if (entity.type === 'gazelle' && other.type === 'gazelle') {
+                        entity.meetCounter++;
+                        other.meetCounter++;
+                        if (entity.meetCounter >= 100 && other.meetCounter >= 100) {
+                            if (getHerbivoreCount() < MAX_HERBIVORE_COUNT) {
+                                const newGazelle = new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'gazelle');
+                                entities.push(newGazelle);
+                                entity.meetCounter = 0;
+                                other.meetCounter = 0;
+                                addMessage(new Date().toLocaleTimeString() + " A gazellák szaporodtak.");
+                            }
+                        }
+                    }
+                    else if (entity.type === 'carnivore' && other.type === 'carnivore') {
                         entity.meetCounter++;
                         other.meetCounter++;
                         if (entity.meetCounter >= 200 && other.meetCounter >= 200 && getCarnivoreCount() < MAX_CARNIVORE_COUNT) {
@@ -261,7 +288,7 @@ function update() {
         return;
     }
     if (herbivoreCount === 0) {
-        addMessage("Nincs több zebra. A szimuláció véget ért.");
+        addMessage("Nincs több zebra és gazella. A szimuláció véget ért.");
         return;
     }
     if (carnivoreCount === 0) {

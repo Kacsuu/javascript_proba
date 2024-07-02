@@ -12,11 +12,14 @@ const plantGrowthInterval = 500;
 const MAX_HERBIVORE_COUNT = 20;
 const MAX_CARNIVORE_COUNT = 10;
 
+const rockCount = 5;
+
 const images = {
     plant: new Image(),
     herbivore: new Image(),
     gazelle: new Image(),
-    carnivore: new Image()
+    carnivore: new Image(),
+    rock: new Image()
 };
 
 canvas.addEventListener('mousemove', function (event) {
@@ -38,6 +41,7 @@ images.plant.src = 'Images/grass.png';
 images.herbivore.src = 'Images/zebra.png';
 images.gazelle.src = 'Images/gazelle.png';
 images.carnivore.src = 'Images/lion.png';
+images.rock.src = 'Images/rock.png';
 
 class Entity {
     constructor(x, y, type) {
@@ -57,12 +61,13 @@ class Entity {
         const img = images[this.type];
         ctx.drawImage(img, this.x, this.y, this.size, this.size);
     }
+    
 
     move() {
         const maxSpeed = 3;
         const gazelleSpeed = 4;
 
-        if (this.type !== 'plant') {
+        if (this.type !== 'plant' && this.type !== 'rock') {
             if (this.persistenceCounter <= 0) {
                 this.directionX = Math.random() * 2 - 1;
                 this.directionY = Math.random() * 2 - 1;
@@ -96,6 +101,45 @@ class Entity {
             }
 
             this.persistenceCounter--;
+
+            this.checkCollisionWithRocks();
+        }
+    }
+
+    checkCollisionWithRocks() {
+        for (const entity of entities) {
+            if (entity.type === 'rock' && this !== entity) {
+                if (this.x < entity.x + entity.size &&
+                    this.x + this.size > entity.x &&
+                    this.y < entity.y + entity.size &&
+                    this.y + this.size > entity.y) {
+                    // Collision
+                    const overlapX = Math.min(this.x + this.size - entity.x, entity.x + entity.size - this.x);
+                    const overlapY = Math.min(this.y + this.size - entity.y, entity.y + entity.size - this.y);
+
+                    if (overlapX < overlapY) {
+                        if (this.x < entity.x) {
+                            this.x -= overlapX / 2;
+                            this.directionX = -Math.abs(this.directionX);
+                        } else {
+                            this.x += overlapX / 2;
+                            this.directionX = Math.abs(this.directionX);
+                        }
+                    } else {
+                        if (this.y < entity.y) {
+                            this.y -= overlapY / 2;
+                            this.directionY = -Math.abs(this.directionY);
+                        } else {
+                            this.y += overlapY / 2;
+                            this.directionY = Math.abs(this.directionY);
+                        }
+                    }
+
+                    // Slightly randomize the direction to prevent oscillation
+                    this.directionX += (Math.random() - 0.5) * 0.2;
+                    this.directionY += (Math.random() - 0.5) * 0.2;
+                }
+            }
         }
     }
 
@@ -120,6 +164,12 @@ const entities = [];
 for (let i = 0; i < plantCount; i++) {
     entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'plant'));
 }
+
+//Generate stones
+for (let i = 0; i < rockCount; i++) {
+    entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'rock'));
+}
+
 
 function addEntities(type, count) {
     for (let i = 0; i < count; i++) {

@@ -1,8 +1,6 @@
-// simulation.js
 document.addEventListener('imagesLoaded', () => {
     const canvas = document.getElementById('simulationCanvas');
     const ctx = canvas.getContext('2d');
-    const messagesDiv = document.getElementById('messages');
     const crosshair = document.getElementById('crosshair');
 
     const canvasWidth = canvas.width;
@@ -16,49 +14,19 @@ document.addEventListener('imagesLoaded', () => {
 
     const rockCount = 5;
 
-    function addMessage(message) {
-        const p = document.createElement('p');
-        p.textContent = message;
-        messagesDiv.appendChild(p);
-    }
-
-    const entities = [];
-
-    // Generate plants
-    for (let i = 0; i < plantCount; i++) {
-        entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'plant'));
-    }
-
-    // Generate stones
-    for (let i = 0; i < rockCount; i++) {
-        entities.push(new Entity(Math.random() * canvasWidth, Math.random() * canvasHeight, 'rock'));
-    }
-
-    function addEntities(type, count) {
-        for (let i = 0; i < count; i++) {
-            const x = Math.random() * canvasWidth;
-            const y = Math.random() * canvasHeight;
-            entities.push(new Entity(x, y, type));
-        }
-    }
+    // Generate initial entities
+    generateEntities(plantCount, 'plant', canvasWidth, canvasHeight);
+    generateEntities(rockCount, 'rock', canvasWidth, canvasHeight);
 
     document.getElementById('addAnimalsButton').addEventListener('click', () => {
         const herbivoreCount = parseInt(document.getElementById('herbivoreCountInput').value, 10);
         const carnivoreCount = parseInt(document.getElementById('carnivoreCountInput').value, 10);
 
         if (herbivoreCount > 0 && carnivoreCount > 0) {
-            let randomNum = 0;
-            console.log(randomNum);
             for (let i = 0; i < herbivoreCount; i++) {
-                randomNum = Math.random();
-                if (randomNum < 0.5) {
-                    addEntities('herbivore', 1);
-                } else if (randomNum >= 0.5) {
-                    addEntities('gazelle', 1);
-                }
+                addEntities(Math.random() < 0.5 ? 'herbivore' : 'gazelle', 1, canvasWidth, canvasHeight);
             }
-
-            addEntities('carnivore', carnivoreCount);
+            addEntities('carnivore', carnivoreCount, canvasWidth, canvasHeight);
 
             document.getElementById('herbivoreCountInput').disabled = true;
             document.getElementById('carnivoreCountInput').disabled = true;
@@ -94,26 +62,6 @@ document.addEventListener('imagesLoaded', () => {
 
         herbivoreCountElement.textContent = `Növényevők (zebrák, gazellák): ${herbivoreCount}`;
         carnivoreCountElement.textContent = `Ragadozók (oroszlánok): ${carnivoreCount}`;
-    }
-
-    function getHerbivoreCount() {
-        let count = 0;
-        entities.forEach(entity => {
-            if (entity.type === 'herbivore' || entity.type === 'gazelle') {
-                count++;
-            }
-        });
-        return count;
-    }
-
-    function getCarnivoreCount() {
-        let count = 0;
-        entities.forEach(entity => {
-            if (entity.type === 'carnivore') {
-                count++;
-            }
-        });
-        return count;
     }
 
     function update() {
@@ -220,60 +168,8 @@ document.addEventListener('imagesLoaded', () => {
         requestAnimationFrame(update);
     }
 
-    canvas.addEventListener('mousemove', function (event) {
-        crosshair.style.display = 'block';
-
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left - (crosshair.width / 2);
-        const y = event.clientY - rect.top - (crosshair.height / 2);
-
-        crosshair.style.left = `${x}px`;
-        crosshair.style.top = `${y}px`;
-    });
-
-    canvas.addEventListener('mouseleave', function () {
-        crosshair.style.display = 'none';
-    });
-
-    canvas.addEventListener('click', function (event) {
-        const rect = canvas.getBoundingClientRect();
-        const x = (event.clientX - rect.left) * (canvas.width / rect.width);
-        const y = (event.clientY - rect.top) * (canvas.height / rect.height);
-
-        console.log(`Click coordinates: (${x}, ${y})`);
-
-        handleCanvasClick(x, y);
-    });
-
-    function handleCanvasClick(x, y) {
-        const hitboxMargin = 10;
-
-        for (let i = entities.length - 1; i >= 0; i--) {
-            const entity = entities[i];
-
-            if (entity.type === 'plant') continue;
-
-            const left = entity.x - hitboxMargin;
-            const right = entity.x + entity.size + hitboxMargin;
-            const top = entity.y - hitboxMargin;
-            const bottom = entity.y + entity.size + hitboxMargin;
-
-            console.log(`Checking entity: ${entity.type} at (${entity.x}, ${entity.y})`);
-            console.log(`Hitbox: left=${left}, right=${right}, top=${top}, bottom=${bottom}`);
-
-            if (x > left && x < right && y > top && y < bottom) {
-                console.log(`Hit detected on ${entity.type}!`);
-                if (entity.type === 'herbivore' || entity.type === 'carnivore' || entity.type === 'gazelle') {
-                    console.log(`Removing ${entity.type}`);
-                    entities.splice(i, 1);
-                    addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : entity.type === 'carnivore' ? 'oroszlán' : 'gazella'} meghalt egy kattintásra.`);
-                    updateCounts();
-                    return;
-                }
-            }
-        }
-        console.log("No entity was clicked");
-    }
+    // Eseménykezelők beállítása
+    setupEventHandlers(canvas, crosshair, updateCounts);
 
     // Kezdjük el a szimulációt
     requestAnimationFrame(update);

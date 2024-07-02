@@ -391,10 +391,10 @@ function handleCanvasClick(x, y) {
 
         if (x > left && x < right && y > top && y < bottom) {
             console.log(`Hit detected on ${entity.type}!`);
-            if (entity.type === 'herbivore' || entity.type === 'carnivore') {
+            if (entity.type === 'herbivore' || entity.type === 'carnivore' || entity.type === 'gazelle') {
                 console.log(`Removing ${entity.type}`);
                 entities.splice(i, 1);
-                addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : 'oroszlán'} meghalt egy kattintásra.`);
+                addMessage(new Date().toLocaleTimeString() + ` Egy ${entity.type === 'herbivore' ? 'zebra' : entity.type === 'carnivore' ? 'oroszlán' : 'gazella'} meghalt egy kattintásra.`);
                 updateCounts();
                 return;
             }
